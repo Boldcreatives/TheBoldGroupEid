@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Bold Group Eid Greeting</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f2f2f2;
+      text-align: center;
+      padding: 20px;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      margin-top: 20px;
+    }
+    input {
+      margin: 10px;
+      padding: 10px;
+      width: 250px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>The Bold Group Eid Greeting</h2>
+  <input type="text" id="name" placeholder="Arabic Name">
+  <br>
+  <input type="text" id="title" placeholder="English Name">
+  <br>
+  <button onclick="generateCard()">Show Card</button>
+  <br><br>
+  <canvas id="cardCanvas" width="768" height="960"></canvas>
+  <br>
+  <a id="downloadLink" style="display:none" download="EidCard.png">📥 Download Card</a>
+
+  <script>
+    const canvas = document.getElementById("cardCanvas");
+    const ctx = canvas.getContext("2d");
+    const image = new Image();
+    image.src = "Greetings Cards-02.png"; // Make sure this path is correct for the base image
+
+    const loadFonts = async () => {
+      const boldFont = new FontFace('WalterBold', 'url(ABCWalterNeue-Bold-Trial.otf)');
+      const lightFont = new FontFace('WalterLight', 'url(ABCWalterNeue-Light-Trial.otf)');
+      await boldFont.load();
+      await lightFont.load();
+      document.fonts.add(boldFont);
+      document.fonts.add(lightFont);
+    };
+
+    async function generateCard() {
+      const name = document.getElementById("name").value;
+      const title = document.getElementById("title").value;
+
+      await loadFonts();
+
+      image.onload = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "#ffffff"; // Text color white
+        ctx.textAlign = "center"; // Align all text to the center
+
+        // Full Name - always in the center
+        ctx.font = "40px WalterBold"; // Font size for large names
+        ctx.fillText(name, canvas.width / 2, 660); // Y: 660 to place it appropriately
+
+        // Job Title - always in the center
+        ctx.font = "30px WalterLight"; // Font size for job titles
+        ctx.fillText(title, canvas.width / 2, 710); // Y: 700 to place it below the name with appropriate spacing
+
+        const link = document.getElementById("downloadLink");
+        link.href = canvas.toDataURL("image/png");
+        link.style.display = "inline-block";
+      };
+
+      if (image.complete) image.onload();
+    }
+  </script>
+</body>
+</html>
